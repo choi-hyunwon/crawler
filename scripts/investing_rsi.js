@@ -49,5 +49,7 @@ async function getRSI(url, label) {
   for (const { url, label } of targets) {
     await getRSI(url, label);
   }
+  sendSms("+821036706842", "안녕하세요, RSI 조회를 완료하였습니다.");
   sendSms("+821095962532", "안녕하세요, RSI 조회를 완료하였습니다.");
+
 })(); 
