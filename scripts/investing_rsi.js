@@ -1,6 +1,7 @@
 const { chromium } = require('playwright');
 const targets = require('./investing_rsi_targets');
 const { uploadRSIToSupabase } = require('./supabase_rsi_upload');
+const sendSms = require('./sendSms').default;
 
 function getTodayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -38,6 +39,7 @@ async function getRSI(url, label) {
       rsi_value: parseFloat(rsiValue),
       fetched_at: getTodayStr()
     });
+ 
   } else {
     console.log(`${label} RSI(14) 값을 찾지 못했습니다.`);
   }
@@ -47,4 +49,5 @@ async function getRSI(url, label) {
   for (const { url, label } of targets) {
     await getRSI(url, label);
   }
+  sendSms("+821095962532", "안녕하세요, RSI 조회를 완료하였습니다.");
 })(); 
