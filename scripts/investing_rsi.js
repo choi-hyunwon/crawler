@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 const targets = require('./investing_rsi_targets');
 const { uploadRSIToSupabase } = require('./supabase_rsi_upload');
-const sendSms = require('./sendSms').default;
+const sendEmail = require('./sendSms').default;
 
 function getTodayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -49,7 +49,11 @@ async function getRSI(url, label) {
   for (const { url, label } of targets) {
     await getRSI(url, label);
   }
-  sendSms("+821036706842", "안녕하세요, RSI 조회를 완료하였습니다.");
-  sendSms("+821095962532", "안녕하세요, RSI 조회를 완료하였습니다.");
+  sendEmail({
+    to: 'danboys@domfam.com',
+    subject: 'RSI 조회 완료',
+    body: 'RSI 조회 완료',
+    from: 'danboys@domfam.com'
+  });
 
 })(); 
