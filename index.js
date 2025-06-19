@@ -1,0 +1,1 @@
+require('./scripts/golfmon_main'); 
