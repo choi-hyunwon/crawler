@@ -10,7 +10,7 @@ async function sendSms(phoneNumber, message) {
     MessageAttributes: {
       'AWS.SNS.SMS.SMSType': {
         DataType: 'String',
-        StringValue: 'Transactional' // 또는 'Promotional'
+        StringValue: 'Promotional' // 또는 'Promotional'
       }
     }
   };
