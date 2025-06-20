@@ -1,7 +1,6 @@
 const { chromium } = require('playwright');
 const targets = require('./investing_rsi_targets');
-const { uploadRSIToSupabase } = require('./supabase_rsi_upload');
-const sendEmail = require('./sendSms').default;
+const { uploadToNotion } = require('./notion_upload');
 
 function getTodayStr() {
   return new Date().toISOString().slice(0, 10);
@@ -34,10 +33,19 @@ async function getRSI(url, label) {
   await browser.close();
 
   if (rsiValue) {
-    await uploadRSIToSupabase({
+    const rsiValueFloat = parseFloat(rsiValue);
+    let signal = '중립';
+    if (rsiValueFloat > 70) {
+      signal = '과매수';
+    } else if (rsiValueFloat < 30) {
+      signal = '과매도';
+    }
+
+    await uploadToNotion({
       label,
-      rsi_value: parseFloat(rsiValue),
-      fetched_at: getTodayStr()
+      rsi_value: rsiValueFloat,
+      fetched_at: getTodayStr(),
+      signal,
     });
  
   } else {
@@ -49,11 +57,5 @@ async function getRSI(url, label) {
   for (const { url, label } of targets) {
     await getRSI(url, label);
   }
-  sendEmail({
-    to: 'danboys@domfam.com',
-    subject: 'RSI 조회 완료',
-    body: 'RSI 조회 완료',
-    from: 'danboys@domfam.com'
-  });
 
 })(); 
